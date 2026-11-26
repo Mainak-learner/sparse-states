@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="description"
+        content="A stereo event-inertial odometry system with a continuous-time Gaussian-process backend that selects, under a budget, informative measurements between sparse states. Real time on an NVIDIA Jetson AGX Orin.">
+  <meta name="keywords" content="event cameras, visual-inertial odometry, Gaussian processes, continuous-time estimation, measurement selection">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Sparse States, Informative Measurements: Real-Time Stereo Event-Inertial Odometry with Gaussian Processes</title>
+
+  <link href="https://fonts.googleapis.com/css?family=Google+Sans|Noto+Sans|Castoro"
+        rel="stylesheet">
+
+  <link rel="stylesheet" href="./static/css/bulma.min.css">
+  <link rel="stylesheet" href="./static/css/bulma-carousel.min.css">
+  <link rel="stylesheet" href="./static/css/fontawesome.all.min.css">
+  <link rel="stylesheet"
+        href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
+  <link rel="stylesheet" href="./static/css/index.css">
+  <link rel="icon" href="./static/images/favicon.svg">
+
+  <script defer src="./static/js/fontawesome.all.min.js"></script>
+  <script src="./static/js/bulma-carousel.min.js"></script>
+  <script src="./static/js/index.js"></script>
+</head>
+<body>
+
+<section class="hero">
+  <div class="hero-body">
+    <div class="container is-max-desktop">
+      <div class="columns is-centered">
+        <div class="column has-text-centered">
+          <h1 class="title is-1 publication-title">Sparse States, Informative Measurements</h1>
+          <h2 class="subtitle is-3 publication-title">Real-Time Stereo Event-Inertial Odometry with Gaussian Processes</h2>
+          <div class="is-size-5 publication-authors">
+            <!-- TODO: add a home page link to each name, e.g. <a href="https://...">Mainak Sarkar</a> -->
+            <span class="author-block">Mainak Sarkar,</span>
+            <span class="author-block">Varun Murali</span>
+          </div>
+
+          <div class="is-size-5 publication-authors">
+            <span class="author-block">Texas A&amp;M University</span>
+          </div>
+
+          <div class="column has-text-centered">
+            <div class="publication-links">
+              <!-- TODO: replace the two # links with the arXiv links once the paper is posted:
+                   https://arxiv.org/pdf/XXXX.XXXXX and https://arxiv.org/abs/XXXX.XXXXX -->
+              <span class="link-block">
+                <a href="#"
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                      <i class="fas fa-file-pdf"></i>
+                  </span>
+                  <span>Paper</span>
+                </a>
+              </span>
+              <span class="link-block">
+                <a href="#"
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                      <i class="ai ai-arxiv"></i>
+                  </span>
+                  <span>arXiv</span>
+                </a>
+              </span>
+              <span class="link-block">
+                <a href="#videos"
+                   class="button is-normal is-rounded is-dark">
+                  <span class="icon">
+                      <i class="fas fa-video"></i>
+                  </span>
+                  <span>Videos</span>
+                </a>
+              </span>
+              <!-- Code link, for when the code is released:
+              <span class="link-block">
+                <a href="https://github.com/..."
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                      <i class="fab fa-github"></i>
+                  </span>
+                  <span>Code</span>
+                </a>
+              </span>
+              -->
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="hero teaser">
+  <div class="container is-max-desktop">
+    <div class="hero-body">
+      <img src="./static/images/system_overview.png"
+           alt="Overview of the system: a frontend that produces frames and keypoints at a fixed rate, load-driven state placement, uncertainty-driven measurement selection, and a continuous-time Gaussian-process backend.">
+      <h2 class="subtitle has-text-centered">
+        A new state is placed only when the previous backend update has finished. Within a budget,
+        an uncertainty-driven selection chooses informative measurements of the frames
+        completed in between, and each one constrains the trajectory at its own timestamp.
+      </h2>
+    </div>
+  </div>
+</section>
+
+
+<section class="section">
+  <div class="container is-max-desktop">
+    <!-- Abstract. -->
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-four-fifths">
+        <h2 class="title is-3">Abstract</h2>
+        <div class="content has-text-justified">
+          <p>
+            Event cameras promise robust state estimation where conventional cameras fail, capturing
+            fast motion without blur across a wide range of lighting conditions. Running such
+            estimation in real time on embedded hardware, however, remains challenging, and existing
+            real-time estimators discard measurements to keep up, without regard to what these
+            measurements would contribute.
+          </p>
+          <p>
+            We present a stereo event-inertial odometry system with a continuous-time
+            Gaussian-process (GP) backend that selects them instead. A new state is placed only when
+            the previous backend update has finished, so that the spacing of the states follows the
+            available computation. The measurements that arrive between two states are scored by
+            their expected information gain on the trajectory, computed from the covariance predicted
+            by the GP motion prior before the update is solved. Under a per-update budget, an
+            informative subset is then sampled across the whole interval, and each selected
+            measurement is incorporated at its own timestamp through GP interpolation.
+          </p>
+          <p>
+            On six public datasets, our system is the most accurate event-based method on most
+            benchmarks, both offline and in real time on an NVIDIA Jetson AGX Orin, where it reduces
+            the mean error of the state-of-the-art AERO-VIS by 20 to 36%. Ablation studies show that
+            using all in-between measurements breaks real-time operation, and that the
+            uncertainty-driven selection matches or improves on random selection on every dataset,
+            with up to 17% lower mean error.
+          </p>
+        </div>
+      </div>
+    </div>
+    <!--/ Abstract. -->
+  </div>
+</section>
+
+
+<section class="section" id="videos">
+  <div class="container is-max-desktop">
+
+    <!-- Video 1. -->
+    <div class="columns is-centered">
+      <div class="column is-full-width">
+        <h2 class="title is-3">What the selection chooses</h2>
+        <div class="content has-text-justified">
+          <p>
+            The video shows the candidates of individual frames, colored by their expected
+            information gain, and the measurements that the selection draws from them. On
+            <i>slider_fast</i>, whose scene has a distinct foreground and background, the
+            measurements of the near landmarks have a higher gain and are selected more often. On
+            <i>drone_8_hdr</i>, the relation between the depth of a landmark and its gain becomes
+            stronger with the time since the previous state.
+          </p>
+        </div>
+        <div class="content has-text-centered">
+          <video id="selection-gain" class="paper-video" controls preload="metadata" playsinline
+                 poster="./static/images/poster_selection_gain_two_sequences.jpg">
+            <source src="./static/videos/selection_gain_two_sequences.mp4"
+                    type="video/mp4">
+          </video>
+          <p class="video-caption">Two sequences of the EvSLAM dataset, left camera, with subtitles.</p>
+        </div>
+      </div>
+    </div>
+    <!--/ Video 1. -->
+
+  </div>
+</section>
+
+
+<section class="hero is-light is-small">
+  <div class="hero-body">
+    <div class="container is-max-desktop">
+      <h2 class="title is-3">Discard and All against our selection</h2>
+      <div class="content has-text-justified">
+        <p>
+          <i>Discard</i> drops the frames between two states, and <i>All</i> adds every measurement
+          of every frame. Neither bounds the measurements of an update. The videos show the
+          trajectories estimated in real time on VECtor, with one sequence from each of its three
+          environments and the median run of each strategy. Without a budget and a selection method,
+          the estimates of <i>Discard</i> and <i>All</i> drift or lose track, while that of our
+          selection follows the ground truth.
+        </p>
+      </div>
+      <div id="results-carousel" class="carousel results-carousel">
+        <div class="item item-units-dolly">
+          <video id="units-dolly" autoplay controls muted loop playsinline
+                 poster="./static/images/poster_selection_units_dolly.jpg">
+            <source src="./static/videos/selection_units_dolly.mp4"
+                    type="video/mp4">
+          </video>
+        </div>
+        <div class="item item-school-scooter">
+          <video id="school-scooter" autoplay controls muted loop playsinline
+                 poster="./static/images/poster_selection_school_scooter.jpg">
+            <source src="./static/videos/selection_school_scooter.mp4"
+                    type="video/mp4">
+          </video>
+        </div>
+        <div class="item item-corridors-dolly">
+          <video id="corridors-dolly" autoplay controls muted loop playsinline
+                 poster="./static/images/poster_selection_corridors_dolly.jpg">
+            <source src="./static/videos/selection_corridors_dolly.mp4"
+                    type="video/mp4">
+          </video>
+        </div>
+      </div>
+      <p class="video-caption has-text-centered">
+        VECtor sequences <i>units-dolly</i>, <i>school-scooter</i> and <i>corridors-dolly</i>.
+      </p>
+    </div>
+  </div>
+</section>
+
+
+<section class="section">
+  <div class="container is-max-desktop">
+
+    <!-- Video 3. -->
+    <div class="columns is-centered">
+      <div class="column is-full-width">
+        <h2 class="title is-3">Random against our selection</h2>
+        <div class="content has-text-justified">
+          <p>
+            <i>Random</i> draws the measurements uniformly, under the same budget as our selection.
+            The two differ in their consistency from run to run, which a single run would not show,
+            so the video overlays five runs of each on <i>drone_8_hdr</i> (EvSLAM). The runs of
+            <i>Random</i> scatter, and one of them leaves the trajectory, while the runs of our
+            selection stay close to each other and to the ground truth.
+          </p>
+        </div>
+        <div class="content has-text-centered">
+          <video id="random-vs-ours" class="paper-video" autoplay controls muted loop playsinline
+                 poster="./static/images/poster_random_vs_ours_drone_8_hdr.jpg">
+            <source src="./static/videos/random_vs_ours_drone_8_hdr.mp4"
+                    type="video/mp4">
+          </video>
+        </div>
+      </div>
+    </div>
+    <!--/ Video 3. -->
+
+    <!-- Results. -->
+    <div class="columns is-centered">
+      <div class="column is-full-width">
+        <h2 class="title is-3">Results</h2>
+        <div class="content has-text-justified">
+          <p>
+            Mean root-mean-square absolute trajectory error (RMS ATE) over the whole trajectory;
+            lower is better. Real-time results are obtained on an NVIDIA Jetson AGX Orin. The paper
+            gives the per-sequence results, the ablation studies and the runtime.
+          </p>
+        </div>
+        <div class="columns">
+          <div class="column">
+            <table class="table is-narrow is-fullwidth results-table">
+              <caption>Mean RMS ATE [cm] on rpg-stereo, TUM-VIE and VECtor</caption>
+              <thead>
+                <tr><th>Method</th><th>rpg-stereo</th><th>TUM-VIE</th><th>VECtor</th></tr>
+              </thead>
+              <tbody>
+                <tr class="group"><td colspan="4">Offline</td></tr>
+                <tr><td>ESVO2</td><td>36.50</td><td>7.60</td><td>failed</td></tr>
+                <tr><td>SDEVO</td><td>3.43</td><td>1.86</td><td>564.71</td></tr>
+                <tr><td>OKVIS2-SE+</td><td>0.88</td><td>0.41</td><td><b>111.28</b></td></tr>
+                <tr><td>OKVIS2-SL</td><td>2.08</td><td>1.27</td><td>316.32</td></tr>
+                <tr class="ours"><td>Ours</td><td><b>0.57</b></td><td><b>0.37</b></td><td>126.6</td></tr>
+                <tr class="group"><td colspan="4">Real time</td></tr>
+                <tr><td>ESVO2</td><td>223.48</td><td>failed</td><td>failed</td></tr>
+                <tr><td>SDEVO</td><td>12.88</td><td>13.25</td><td>815.99</td></tr>
+                <tr><td>AERO-VIS</td><td>1.83</td><td>1.06</td><td>247.23</td></tr>
+                <tr class="ours"><td>Ours</td><td><b>1.47</b></td><td><b>0.83</b></td><td><b>159.0</b></td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="column">
+            <table class="table is-narrow is-fullwidth results-table">
+              <caption>Mean RMS ATE [m] on EvSLAM; baseline results are offline</caption>
+              <thead>
+                <tr><th>Method</th><th>All</th><th>w/o <i>drone_s_hdr</i></th></tr>
+              </thead>
+              <tbody>
+                <tr><td>ESVIO (events + images)</td><td>0.512</td><td>0.519</td></tr>
+                <tr><td>SDEVO</td><td>0.921</td><td>0.809</td></tr>
+                <tr><td>VINS (images)</td><td>1.103</td><td>0.971</td></tr>
+                <tr><td>OKVIS2-SE+</td><td>3.526<sup>&dagger;</sup></td><td>3.736<sup>&dagger;</sup></td></tr>
+                <tr class="ours"><td>Ours (offline)</td><td><b>0.238</b></td><td><b>0.148</b></td></tr>
+                <tr class="ours"><td>Ours (real-time)</td><td>0.772</td><td>0.417</td></tr>
+              </tbody>
+            </table>
+            <p class="video-caption"><sup>&dagger;</sup>Diverges on the two slider sequences.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!--/ Results. -->
+
+  </div>
+</section>
+
+
+<section class="section" id="BibTeX">
+  <div class="container is-max-desktop content">
+    <h2 class="title">BibTeX</h2>
+    <!-- TODO: replace XXXX.XXXXX with the arXiv identifier. -->
+    <pre><code>@article{sarkar2026sparse,
+  author    = {Sarkar, Mainak and Murali, Varun},
+  title     = {Sparse States, Informative Measurements: Real-Time Stereo Event-Inertial Odometry with Gaussian Processes},
+  journal   = {arXiv preprint arXiv:XXXX.XXXXX},
+  year      = {2026},
+}</code></pre>
+  </div>
+</section>
+
+
+<footer class="footer">
+  <div class="container">
+    <div class="columns is-centered">
+      <div class="column is-8">
+        <div class="content">
+          <p>
+            This website is licensed under a <a rel="license"
+                                                href="http://creativecommons.org/licenses/by-sa/4.0/">Creative
+            Commons Attribution-ShareAlike 4.0 International License</a>.
+          </p>
+          <p>
+            The website template is borrowed from <a
+              href="https://github.com/nerfies/nerfies.github.io">Nerfies</a>.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>
