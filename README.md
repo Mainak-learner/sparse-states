@@ -16,12 +16,6 @@
 
 # Sparse States, Informative Measurements
 
-This is the repository that contains the source code for the project page of
-"Sparse States, Informative Measurements: Real-Time Stereo Event-Inertial Odometry with Gaussian Processes".
-
-Before publishing, fill in the arXiv links (two buttons in `index.html`, the badge above) and the arXiv
-identifier in the BibTeX entry, and replace the `#` of the Project Page badge with the address of the page.
-
 # BibTeX
 If you find this work useful, please cite:
 ```
